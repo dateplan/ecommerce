@@ -1,0 +1,57 @@
+services:
+  app:
+    build: .
+    container_name: bagisto_app
+    working_dir: /var/www/html
+    volumes:
+      - ./src:/var/www/html
+    networks:
+      - bagisto-network
+    depends_on:
+      - db
+    ports:
+      - "9000:9000"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=bagisto
+      - DB_USERNAME=root
+      - DB_PASSWORD=secret
+    command: bash -c "composer install && php artisan key:generate && php artisan migrate && php artisan db:seed && php-fpm"  # 順番を修正
+    platform: linux/arm64
+
+  db:
+    image: mysql:5.7
+    container_name: bagisto_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: bagisto
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - bagisto-network
+    ports:
+      - "3306:3306"
+    platform: linux/amd64
+
+  nginx:
+    image: nginx:alpine
+    container_name: bagisto_nginx
+    working_dir: /var/www/html
+    volumes:
+      - ./src:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "8080:80"
+    networks:
+      - bagisto-network
+    platform: linux/arm64
+
+networks:
+  bagisto-network:
+    driver: bridge
+
+volumes:
+  db_data:
+    driver: local
