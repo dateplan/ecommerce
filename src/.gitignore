@@ -1,4 +1,3 @@
-.env
 .env.testing
 .idea
 .php_cs.cache
@@ -15,14 +14,7 @@ Homestead.yaml
 /node_modules
 npm-debug.log
 package-lock.json
-/public/css 
-/public/js
-/public/hot
-/public/storage
-/public/vendor
-/lang/vendor
 /storage/*.key
 /storage/dcc-data/
-/vendor
 yarn.lock
 yarn-error.log

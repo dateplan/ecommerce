@@ -17,11 +17,7 @@ services:
       - DB_DATABASE=bagisto
       - DB_USERNAME=root
       - DB_PASSWORD=secret
-<<<<<<< HEAD
-    command: bash -c "composer install && php artisan key:generate && php artisan migrate && php artisan db:seed && php-fpm"  # 順番を修正
-=======
     command: bash -c "composer install && php artisan key:generate && php artisan migrate && php artisan db:seed && php-fpm"
->>>>>>> a26e420811d5e5f953b0741929cfe0ceedc852bd
     platform: linux/arm64
 
   db:
