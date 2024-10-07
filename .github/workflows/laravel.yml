@@ -28,21 +28,24 @@ jobs:
       # Install Composer dependencies
       - name: Install Dependencies
         run: composer install --no-ansi --no-interaction --prefer-dist
-        continue-on-error: true # エラーが発生しても続行する設定。エラーが発生した場合は次のステップに進む。
+        working-directory: ./src # composer.jsonが存在するディレクトリを指定
 
       # Generate application key
       - name: Generate key
         run: php artisan key:generate
+        working-directory: ./src # artisanが存在するディレクトリを指定
 
       # Set directory permissions
       - name: Directory Permissions
         run: chmod -R 777 storage bootstrap/cache
+        working-directory: ./src # ディレクトリを指定
 
       # Create SQLite database
       - name: Create Database
         run: |
           mkdir -p database
           touch database/database.sqlite
+        working-directory: ./src # ディレクトリを指定
 
       # Run tests
       - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
@@ -50,3 +53,4 @@ jobs:
           DB_CONNECTION: sqlite
           DB_DATABASE: database/database.sqlite
         run: php artisan test
+        working-directory: ./src # ディレクトリを指定
