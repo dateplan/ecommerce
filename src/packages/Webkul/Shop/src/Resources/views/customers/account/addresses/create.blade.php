@@ -65,26 +65,6 @@
 
                     {!! view_render_event('bagisto.shop.customers.account.addresses.create_form_controls.company_name.after') !!}
 
-                    <!-- First Name -->
-                    <x-shop::form.control-group>
-                        <x-shop::form.control-group.label class="required">
-                            @lang('shop::app.customers.account.addresses.create.first-name')
-                        </x-shop::form.control-group.label>
-
-                        <x-shop::form.control-group.control
-                            type="text"
-                            name="first_name"
-                            rules="required"
-                            :value="old('first_name')"
-                            :label="trans('shop::app.customers.account.addresses.create.first-name')"
-                            :placeholder="trans('shop::app.customers.account.addresses.create.first-name')"
-                        />
-
-                        <x-shop::form.control-group.error control-name="first_name" />
-                    </x-shop::form.control-group>
-
-                    {!! view_render_event('bagisto.shop.customers.account.addresses.create_form_controls.first_name.after') !!}
-
                     <!-- Last Name  -->
                     <x-shop::form.control-group>
                         <x-shop::form.control-group.label class="required">
@@ -105,6 +85,26 @@
 
                     {!! view_render_event('bagisto.shop.customers.account.addresses.create_form_controls.last_name.after') !!}
 
+                    <!-- First Name -->
+                    <x-shop::form.control-group>
+                        <x-shop::form.control-group.label class="required">
+                            @lang('shop::app.customers.account.addresses.create.first-name')
+                        </x-shop::form.control-group.label>
+
+                        <x-shop::form.control-group.control
+                            type="text"
+                            name="first_name"
+                            rules="required"
+                            :value="old('first_name')"
+                            :label="trans('shop::app.customers.account.addresses.create.first-name')"
+                            :placeholder="trans('shop::app.customers.account.addresses.create.first-name')"
+                        />
+
+                        <x-shop::form.control-group.error control-name="first_name" />
+                    </x-shop::form.control-group>
+
+                    {!! view_render_event('bagisto.shop.customers.account.addresses.create_form_controls.first_name.after') !!}
+                    
                     <!-- E-mail -->
                     <x-shop::form.control-group>
                         <x-shop::form.control-group.label class="required">

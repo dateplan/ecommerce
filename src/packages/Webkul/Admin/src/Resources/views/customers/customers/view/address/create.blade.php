@@ -88,23 +88,6 @@
                         </div>
 
                         <div class="flex gap-4 max-sm:flex-wrap">
-                            <!-- First Name -->
-                            <x-admin::form.control-group class="w-full">
-                                <x-admin::form.control-group.label class="required">
-                                    @lang('admin::app.customers.customers.view.address.create.first-name')
-                                </x-admin::form.control-group.label>
-
-                                <x-admin::form.control-group.control
-                                    type="text"
-                                    name="first_name"
-                                    rules="required"
-                                    :label="trans('admin::app.customers.customers.view.address.create.first-name')"
-                                    :placeholder="trans('admin::app.customers.customers.view.address.create.first-name')"
-                                />
-
-                                <x-admin::form.control-group.error control-name="first_name" />
-                            </x-admin::form.control-group>
-
                             <!-- Last Name -->
                             <x-admin::form.control-group class="w-full">
                                 <x-admin::form.control-group.label class="required">
@@ -120,6 +103,22 @@
                                 />
 
                                 <x-admin::form.control-group.error control-name="last_name" />
+                            </x-admin::form.control-group>
+                            <!-- First Name -->
+                            <x-admin::form.control-group class="w-full">
+                                <x-admin::form.control-group.label class="required">
+                                    @lang('admin::app.customers.customers.view.address.create.first-name')
+                                </x-admin::form.control-group.label>
+
+                                <x-admin::form.control-group.control
+                                    type="text"
+                                    name="first_name"
+                                    rules="required"
+                                    :label="trans('admin::app.customers.customers.view.address.create.first-name')"
+                                    :placeholder="trans('admin::app.customers.customers.view.address.create.first-name')"
+                                />
+
+                                <x-admin::form.control-group.error control-name="first_name" />
                             </x-admin::form.control-group>
                         </div>
 

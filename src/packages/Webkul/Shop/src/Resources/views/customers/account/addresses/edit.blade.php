@@ -77,26 +77,6 @@
 
                 {!! view_render_event('bagisto.shop.customers.account.addresses.edit_form_controls.company_name.after', ['address' => $address]) !!}
 
-                <!-- First Name -->
-                <x-shop::form.control-group>
-                    <x-shop::form.control-group.label class="required">
-                        @lang('shop::app.customers.account.addresses.edit.first-name')
-                    </x-shop::form.control-group.label>
-
-                    <x-shop::form.control-group.control
-                        type="text"
-                        name="first_name"
-                        rules="required"
-                        :value="old('first_name') ?? $address->first_name"
-                        :label="trans('shop::app.customers.account.addresses.edit.first-name')"
-                        :placeholder="trans('shop::app.customers.account.addresses.edit.first-name')"
-                    />
-
-                    <x-shop::form.control-group.error control-name="first_name" />
-                </x-shop::form.control-group>
-
-                {!! view_render_event('bagisto.shop.customers.account.addresses.edit_form_controls.first_name.after', ['address' => $address]) !!}
-
                 <!-- Last Name -->
                 <x-shop::form.control-group>
                     <x-shop::form.control-group.label class="required">
@@ -116,6 +96,26 @@
                 </x-shop::form.control-group>
 
                 {!! view_render_event('bagisto.shop.customers.account.addresses.edit_form_controls.last_name.after', ['address' => $address]) !!}
+
+                <!-- First Name -->
+                <x-shop::form.control-group>
+                    <x-shop::form.control-group.label class="required">
+                        @lang('shop::app.customers.account.addresses.edit.first-name')
+                    </x-shop::form.control-group.label>
+
+                    <x-shop::form.control-group.control
+                        type="text"
+                        name="first_name"
+                        rules="required"
+                        :value="old('first_name') ?? $address->first_name"
+                        :label="trans('shop::app.customers.account.addresses.edit.first-name')"
+                        :placeholder="trans('shop::app.customers.account.addresses.edit.first-name')"
+                    />
+
+                    <x-shop::form.control-group.error control-name="first_name" />
+                </x-shop::form.control-group>
+
+                {!! view_render_event('bagisto.shop.customers.account.addresses.edit_form_controls.first_name.after', ['address' => $address]) !!}
 
                 <!-- E-mail -->
                 <x-shop::form.control-group>

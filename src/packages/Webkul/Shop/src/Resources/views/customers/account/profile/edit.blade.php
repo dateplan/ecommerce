@@ -56,6 +56,26 @@
 
             {!! view_render_event('bagisto.shop.customers.account.profile.edit_form_controls.image.after') !!}
 
+            <!-- Last Name -->
+            <x-shop::form.control-group>
+                <x-shop::form.control-group.label class="required">
+                    @lang('shop::app.customers.account.profile.edit.last-name')
+                </x-shop::form.control-group.label>
+                
+                <x-shop::form.control-group.control
+                type="text"
+                name="last_name"
+                rules="required"
+                :value="old('last_name') ?? $customer->last_name"
+                :label="trans('shop::app.customers.account.profile.edit.last-name')"
+                :placeholder="trans('shop::app.customers.account.profile.edit.last-name')"
+                />
+                
+                <x-shop::form.control-group.error control-name="last_name" />
+            </x-shop::form.control-group>
+            
+            {!! view_render_event('bagisto.shop.customers.account.profile.edit_form_controls.last_name.after') !!}
+            
             <!-- First Name -->
             <x-shop::form.control-group>
                 <x-shop::form.control-group.label class="required">
@@ -75,26 +95,6 @@
             </x-shop::form.control-group>
 
             {!! view_render_event('bagisto.shop.customers.account.profile.edit_form_controls.first_name.after') !!}
-
-            <!-- Last Name -->
-            <x-shop::form.control-group>
-                <x-shop::form.control-group.label class="required">
-                    @lang('shop::app.customers.account.profile.edit.last-name')
-                </x-shop::form.control-group.label>
-
-                <x-shop::form.control-group.control
-                    type="text"
-                    name="last_name"
-                    rules="required"
-                    :value="old('last_name') ?? $customer->last_name"
-                    :label="trans('shop::app.customers.account.profile.edit.last-name')"
-                    :placeholder="trans('shop::app.customers.account.profile.edit.last-name')"
-                />
-
-                <x-shop::form.control-group.error control-name="last_name" />
-            </x-shop::form.control-group>
-
-            {!! view_render_event('bagisto.shop.customers.account.profile.edit_form_controls.last_name.after') !!}
 
             <!-- Email -->
             <x-shop::form.control-group>
