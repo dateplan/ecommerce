@@ -621,7 +621,7 @@ return [
                 'bagisto'          => 'Bagisto',
                 'confirm-password' => 'パスワードの確認',
                 'email'            => 'メール',
-                'email-address'    => 'admin@example.com',
+                'email-address'    => 'admin@admin.com',
                 'password'         => 'パスワード',
                 'title'            => '管理者の作成',
             ],

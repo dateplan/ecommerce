@@ -211,12 +211,16 @@ it('should store the products to the compare list', function () {
 
     // Act and Assert.
     $this->loginAsCustomer();
-
-    postJson(route('shop.api.compare.store'), [
+    
+    $response = postJson(route('shop.api.compare.store'), [
         'product_id' => $product->id,
-    ])
-        ->assertOk()
-        ->assertSeeText(trans('shop::app.compare.item-add-success'));
+    ]);
+    
+    // レスポンスの内容をダンプ
+    dump($response->getContent());
+    
+    $response->assertOk()
+             ->assertSeeText(trans('shop::app.compare.item-add-success'));
 });
 
 it('should fails the validation error when not provided product id when move the compare list item', function () {

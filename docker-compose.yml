@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   app:
     build: .
@@ -5,6 +7,7 @@ services:
     working_dir: /var/www/html
     volumes:
       - ./src:/var/www/html
+      - ./database:/var/www/html/database
     networks:
       - bagisto-network
     depends_on:
@@ -12,12 +15,14 @@ services:
     ports:
       - "9000:9000"
     environment:
+      - DB_CONNECTION=mysql
       - DB_HOST=db
       - DB_PORT=3306
       - DB_DATABASE=bagisto
       - DB_USERNAME=root
       - DB_PASSWORD=secret
-    command: bash -c "composer install && php artisan key:generate && php-fpm"
+      - DB_DATABASE_TEST=/var/www/html/database/testing.sqlite
+    command: bash -c "sleep 10 && composer install && php artisan key:generate && php-fpm"
     platform: linux/arm64
 
   db:
@@ -27,6 +32,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: bagisto
+      MYSQL_USER: root
+      MYSQL_PASSWORD: secret
     volumes:
       - db_data:/var/lib/mysql
     networks:

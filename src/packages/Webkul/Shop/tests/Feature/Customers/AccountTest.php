@@ -151,14 +151,14 @@ it('should fails the validation error when password is not provided when delete 
 it('should delete the customer account', function () {
     // Arrange.
     $customer = Customer::factory()->create([
-        'password' => Hash::make('admin123'),
+        'password' => Hash::make('password'),
     ]);
 
     // Act and Assert.
     $this->loginAsCustomer($customer);
 
     postJson(route('shop.customers.account.profile.destroy'), [
-        'password' => 'admin123',
+        'password' => 'password',
     ])
         ->assertRedirect(route('shop.customer.session.index'));
 

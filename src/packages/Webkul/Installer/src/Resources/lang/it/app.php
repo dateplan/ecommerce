@@ -620,7 +620,7 @@ return [
                 'confirm-password' => 'Conferma Password',
                 'download-sample'  => 'Scarica Esempio',
                 'email'            => 'Email',
-                'email-address'    => 'admin@example.com',
+                'email-address'    => 'admin@admin.com',
                 'password'         => 'Password',
                 'sample-products'  => 'Prodotti di Esempio',
                 'title'            => 'Crea Amministratore',

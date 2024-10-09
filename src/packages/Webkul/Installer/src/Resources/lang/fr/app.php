@@ -621,7 +621,7 @@ return [
                 'bagisto'          => 'Bagisto',
                 'confirm-password' => 'Confirmer le mot de passe',
                 'email'            => 'Email',
-                'email-address'    => 'admin@example.com',
+                'email-address'    => 'admin@admin.com',
                 'password'         => 'Mot de passe',
                 'title'            => 'Créer un administrateur',
             ],

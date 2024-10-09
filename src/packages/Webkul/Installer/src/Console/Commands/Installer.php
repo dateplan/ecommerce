@@ -375,7 +375,7 @@ class Installer extends Command
 
         $adminEmail = text(
             label    : 'Enter the email address of the admin user',
-            default  : 'admin@example.com',
+            default  : 'admin@admin.com',
             validate : fn (string $value) => match (true) {
                 ! filter_var($value, FILTER_VALIDATE_EMAIL) => 'The email address you entered is not valid please try again.',
                 default                                     => null
@@ -384,7 +384,7 @@ class Installer extends Command
 
         $adminPassword = text(
             label    : 'Configure the password for the admin user',
-            default  : 'admin123',
+            default  : 'password',
             required : true
         );
 

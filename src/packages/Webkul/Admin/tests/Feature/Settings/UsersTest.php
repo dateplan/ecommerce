@@ -36,7 +36,7 @@ it('should fail the validation with errors when confirm password not provided wh
     $this->loginAsAdmin();
 
     postJson(route('admin.settings.users.store'), [
-        'password' => 'admin123',
+        'password' => 'password',
     ])
         ->assertJsonValidationErrorFor('name')
         ->assertJsonValidationErrorFor('email')
@@ -115,7 +115,7 @@ it('should fail the validation with errors when certain field not provided when 
 
     putJson(route('admin.settings.users.update'), [
         'id'       => $admin->id,
-        'password' => 'admin123',
+        'password' => 'password',
     ])
         ->assertJsonValidationErrorFor('name')
         ->assertJsonValidationErrorFor('email')

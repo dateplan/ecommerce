@@ -621,7 +621,7 @@ return [
                 'bagisto'          => 'बैगिस्टो',
                 'confirm-password' => 'पासवर्ड की पुष्टि करें',
                 'email'            => 'ईमेल',
-                'email-address'    => 'admin@example.com',
+                'email-address'    => 'admin@admin.com',
                 'password'         => 'पासवर्ड',
                 'title'            => 'व्यवस्थापक बनाएं',
             ],

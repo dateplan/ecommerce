@@ -621,7 +621,7 @@ return [
                 'bagisto'          => 'Bagisto',
                 'confirm-password' => 'Bevestig wachtwoord',
                 'email'            => 'E-mail',
-                'email-address'    => 'admin@example.com',
+                'email-address'    => 'admin@admin.com',
                 'password'         => 'Wachtwoord',
                 'title'            => 'Beheerder aanmaken',
             ],

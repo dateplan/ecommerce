@@ -57,8 +57,8 @@ it('successfully registers a customer', function () {
         'first_name'            => fake()->firstName(),
         'last_name'             => fake()->lastName(),
         'email'                 => fake()->email(),
-        'password'              => 'admin123',
-        'password_confirmation' => 'admin123',
+        'password'              => 'password',
+        'password_confirmation' => 'password',
     ];
 
     // Act and Assert.
@@ -75,8 +75,8 @@ it('successfully registers a customer and send mail to the customer that you hav
         'first_name'            => fake()->firstName(),
         'last_name'             => fake()->lastName(),
         'email'                 => fake()->email(),
-        'password'              => 'admin123',
-        'password_confirmation' => 'admin123',
+        'password'              => 'password',
+        'password_confirmation' => 'password',
     ];
 
     CoreConfig::factory()->create([
@@ -107,8 +107,8 @@ it('successfully registers a customer and send mail to the customer that you nee
         'first_name'            => fake()->firstName(),
         'last_name'             => fake()->lastName(),
         'email'                 => fake()->email(),
-        'password'              => 'admin123',
-        'password_confirmation' => 'admin123',
+        'password'              => 'password',
+        'password_confirmation' => 'password',
     ];
 
     CoreConfig::factory()->create([

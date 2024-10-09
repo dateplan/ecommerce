@@ -1,4 +1,3 @@
-
 FROM php:8.1-fpm
 
 # 必要なパッケージをインストール
@@ -21,5 +20,8 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
 
 # Composerをインストール
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# php.iniをコピー
+COPY php.ini /usr/local/etc/php/conf.d/
 
 WORKDIR /var/www/html

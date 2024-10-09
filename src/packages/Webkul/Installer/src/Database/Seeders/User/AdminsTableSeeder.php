@@ -23,8 +23,8 @@ class AdminsTableSeeder extends Seeder
         DB::table('admins')->insert([
             'id'         => 1,
             'name'       => trans('installer::app.seeders.user.users.name', [], $defaultLocale),
-            'email'      => 'admin@example.com',
-            'password'   => bcrypt('admin123'),
+            'email'      => 'admin@admin.com',
+            'password'   => bcrypt('password'),
             'api_token'  => Str::random(80),
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),

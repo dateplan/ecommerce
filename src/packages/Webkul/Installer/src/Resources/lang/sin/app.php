@@ -621,7 +621,7 @@ return [
                 'bagisto'          => 'බැගිස්ටෝ',
                 'confirm-password' => 'මුරපදය තහවුරු කරන්න',
                 'email'            => 'ඊමේල්',
-                'email-address'    => 'admin@example.com',
+                'email-address'    => 'admin@admin.com',
                 'password'         => 'මුරපදය',
                 'title'            => 'පරිපාලකයකු සාදන්න',
             ],

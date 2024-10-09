@@ -621,7 +621,7 @@ return [
                 'bagisto'          => 'Bagisto',
                 'confirm-password' => 'אשר סיסמה',
                 'email'            => 'אימייל',
-                'email-address'    => 'admin@example.com',
+                'email-address'    => 'admin@admin.com',
                 'password'         => 'סיסמה',
                 'title'            => 'צור מנהל',
             ],

@@ -621,7 +621,7 @@ return [
                 'bagisto'          => 'বাগিস্তো',
                 'confirm-password' => 'পাসওয়ার্ড নিশ্চিত করুন',
                 'email'            => 'ইমেইল',
-                'email-address'    => 'admin@example.com',
+                'email-address'    => 'admin@admin.com',
                 'password'         => 'পাসওয়ার্ড',
                 'title'            => 'অ্যাডমিনিস্ট্রেটর তৈরি করুন',
             ],

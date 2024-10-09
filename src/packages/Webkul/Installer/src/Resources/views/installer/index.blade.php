@@ -873,7 +873,7 @@
                                         <x-installer::form.control-group.control
                                             type="select"
                                             name="app_currency"
-                                            ::value="envData.app_currency ?? 'USD'"
+                                            ::value="envData.app_currency ?? 'JPY'"
                                             :aria-label="trans('installer::app.installer.index.environment-configuration.default-currency')"
                                             rules="required"
                                             :label="trans('installer::app.installer.index.environment-configuration.default-currency')"
@@ -1101,7 +1101,7 @@
                                         type="text"
                                         name="email"
                                         rules="required"
-                                        value="admin@example.com"
+                                        value="admin@admin.com"
                                         :label="trans('installer::app.installer.index.create-administrator.email')"
                                         :placeholder="trans('installer::app.installer.index.create-administrator.email-address')"
                                     />
