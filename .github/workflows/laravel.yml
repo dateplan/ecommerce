@@ -23,7 +23,7 @@ jobs:
 
       # Copy .env.testing to .env in the src directory
       - name: Copy .env.testing
-        run: cp .env.testing src/.env
+        run: cp src/.env.testing src/.env
 
       # Install Composer dependencies
       - name: Install Dependencies
