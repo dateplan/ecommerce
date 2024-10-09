@@ -14,38 +14,38 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Set up PHP (バージョンを8.1に変更)
+      # Setup PHP (バージョンを8.1に変更)
       - name: Setup PHP
         uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
         with:
-          php-version: '8.1'  # PHPバージョンを8.1に変更
-          extensions: mbstring, xml, bcmath, sqlite3 # 必要なPHP拡張を追加
+          php-version: '8.1'  
+          extensions: mbstring, xml, bcmath, sqlite3
 
-      # Copy .env file
-      - name: Copy .env
-        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+      # Copy .env.testing to .env in the src directory
+      - name: Copy .env.testing
+        run: cp .env.testing src/.env
 
       # Install Composer dependencies
       - name: Install Dependencies
         run: composer install --no-ansi --no-interaction --prefer-dist
-        working-directory: ./src # composer.jsonが存在するディレクトリを指定
+        working-directory: ./src 
 
       # Generate application key
       - name: Generate key
         run: php artisan key:generate
-        working-directory: ./src # artisanが存在するディレクトリを指定
+        working-directory: ./src
 
       # Set directory permissions
       - name: Directory Permissions
         run: chmod -R 777 storage bootstrap/cache
-        working-directory: ./src # ディレクトリを指定
+        working-directory: ./src 
 
       # Create SQLite database
       - name: Create Database
         run: |
           mkdir -p database
           touch database/database.sqlite
-        working-directory: ./src # ディレクトリを指定
+        working-directory: ./src 
 
       # Run tests
       - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
@@ -53,4 +53,4 @@ jobs:
           DB_CONNECTION: sqlite
           DB_DATABASE: database/database.sqlite
         run: php artisan test
-        working-directory: ./src # ディレクトリを指定
+        working-directory: ./src
