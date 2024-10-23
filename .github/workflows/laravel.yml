@@ -47,10 +47,9 @@ jobs:
       # Create MySQL database
       - name: Create Database
         run: |
-          mysql -e 'CREATE DATABASE IF NOT EXISTS testing;'
+          mysql -u root -p$MYSQL_ROOT_PASSWORD -e 'CREATE DATABASE IF NOT EXISTS testing;'
         env:
           MYSQL_ROOT_PASSWORD: root_password
-          MYSQL_DATABASE: testing
 
       # Run migrations
       - name: Run Migrations
