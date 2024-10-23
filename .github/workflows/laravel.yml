@@ -11,6 +11,20 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root_password
+          MYSQL_DATABASE: testing
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=30s
+          --health-timeout=5s
+          --health-retries=3
+
     steps:
       - uses: actions/checkout@v4
 
@@ -40,16 +54,16 @@ jobs:
         run: chmod -R 777 storage bootstrap/cache
         working-directory: ./src 
 
-      # Start MySQL service
-      - name: Start MySQL Service
-        run: sudo service mysql start
-
-      # Create MySQL database
-      - name: Create Database
+      # Wait for MySQL to be healthy
+      - name: Wait for MySQL
         run: |
-          mysql -u root -p$MYSQL_ROOT_PASSWORD -e 'CREATE DATABASE IF NOT EXISTS testing;'
-        env:
-          MYSQL_ROOT_PASSWORD: root_password
+          for i in {1..30}; do
+            if mysqladmin ping -h"127.0.0.1" --silent; then
+              break
+            fi
+            echo "Waiting for MySQL..."
+            sleep 1
+          done
 
       # Run migrations
       - name: Run Migrations
