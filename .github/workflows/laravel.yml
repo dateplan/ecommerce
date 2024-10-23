@@ -8,7 +8,6 @@ on:
 
 jobs:
   laravel-tests:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -16,7 +15,7 @@ jobs:
 
       # Setup PHP (バージョンを8.1に変更)
       - name: Setup PHP
-        uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
+        uses: shivammathur/setup-php@v2
         with:
           php-version: '8.1'  
           extensions: mbstring, xml, bcmath, sqlite3
@@ -44,13 +43,23 @@ jobs:
       - name: Create Database
         run: |
           mkdir -p database
-          touch database/database.sqlite
-        working-directory: ./src 
+          touch database/testing.sqlite
+        working-directory: ./src
+
+      # Run migrations
+      - name: Run Migrations
+        run: php artisan migrate --env=testing
+        working-directory: ./src
+
+      # Clear cache (optional but recommended)
+      - name: Clear Cache
+        run: php artisan cache:clear
+        working-directory: ./src
 
       # Run tests
       - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
         env:
           DB_CONNECTION: sqlite
-          DB_DATABASE: database/database.sqlite
+          DB_DATABASE: database/testing.sqlite
         run: php artisan test
         working-directory: ./src

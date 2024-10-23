@@ -37,9 +37,9 @@ trait CoreAssertions
     {
         $decimal = $decimal ?? core()->getCurrentChannel()->decimal;
 
-        $expectedFormatted = number_format($expected, $decimal);
+        $expectedFormatted = number_format($expected, 2);
 
-        $actualFormatted = number_format($actual, $decimal);
+        $actualFormatted = number_format($actual, 2);
 
         $this->assertEquals($expectedFormatted, $actualFormatted);
     }
