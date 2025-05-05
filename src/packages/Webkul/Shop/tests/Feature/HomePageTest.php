@@ -114,12 +114,19 @@ it('should returns the search page of the products', function () {
     ]))->getSimpleProductFactory()->create();
 
     // Act and Assert.
-    get(route('shop.search.index', [
-        'query' => $query = $product->name,
-    ]))
-        ->assertOk()
-        ->assertSeeText($query)
-        ->assertSeeText(trans('shop::app.search.title', ['query' => $query]));
+    // get(route('shop.search.index', [
+    //     'query' => $query = $product->name,
+    // ]))
+    //     ->assertOk()
+    //     ->assertSeeText($query)
+    //     ->assertSeeText(trans('shop::app.search.title', ['query' => $query]));
+    $response = $this->get(route('shop.search.index', [
+        'query' => $product->name, // $product->nameがnullでないか確認
+    ]));
+    $this->assertNotNull($product->name, 'Product name should not be null');
+    $response->assertOk()
+         ->assertSeeText($product->name)
+         ->assertSeeText(trans('shop::app.search.title', ['query' => $product->name]));
 });
 
 it('should fails the validation error when provided wrong email address when subscribe to the shop', function () {
@@ -218,9 +225,10 @@ it('should store the products to the compare list', function () {
     
     // レスポンスの内容をダンプ
     dump($response->getContent());
-    
-    $response->assertOk()
-             ->assertSeeText(trans('shop::app.compare.item-add-success'));
+    $responseContent = json_decode($response->getContent(), true);
+    // $response->assertOk()
+    //          ->assertSeeText(trans('shop::app.compare.item-add-success'));
+    $this->assertSame(trans('shop::app.compare.item-add-success'), $responseContent['data']['message']);
 });
 
 it('should fails the validation error when not provided product id when move the compare list item', function () {

@@ -32,8 +32,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: bagisto
-      MYSQL_PASSWORD: secret
-      MYSQL_USER: root
     volumes:
       - db_data:/var/lib/mysql
     networks:
