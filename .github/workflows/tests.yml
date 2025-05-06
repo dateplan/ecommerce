@@ -52,6 +52,14 @@ jobs:
       run: |
         composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
 
+    - name: Clear Laravel config/cache
+      working-directory: ./src
+      run: |
+        php artisan config:clear
+        php artisan cache:clear
+        php artisan route:clear
+        php artisan view:clear
+
     - name: Generate key
       working-directory: ./src
       run: php artisan key:generate
