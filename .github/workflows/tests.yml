@@ -35,7 +35,7 @@ jobs:
         coverage: none
 
     - name: Copy .env
-      working-directory: ./src
+      working-directory: .
       run: |
         cp .env.example .env
         echo "DB_CONNECTION=mysql" >> .env
@@ -48,14 +48,14 @@ jobs:
         cat .env
 
     - name: Install Dependencies
-      working-directory: ./src
+      working-directory: .
       run: |
         composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
 
     - name: Generate key
-      working-directory: ./src
+      working-directory: .
       run: php artisan key:generate
 
     - name: Execute tests
-      working-directory: ./src
+      working-directory: .
       run: php artisan test --without-tty -v
