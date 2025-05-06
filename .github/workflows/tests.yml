@@ -54,4 +54,4 @@ jobs:
 
     - name: Execute tests
       working-directory: ./src
-      run: php vendor/bin/phpunit
+      run: php artisan test --without-tty -v
