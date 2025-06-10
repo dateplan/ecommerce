@@ -6,9 +6,11 @@ use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Laravel\Octane\FrankenPhp\ServerProcessInspector;
 use Laravel\Octane\FrankenPhp\ServerStateFile;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\SignalableCommandInterface;
 use Symfony\Component\Process\Process;
 
+#[AsCommand(name: 'octane:frankenphp')]
 class StartFrankenPhpCommand extends Command implements SignalableCommandInterface
 {
     use Concerns\InstallsFrankenPhpDependencies,
@@ -25,7 +27,8 @@ class StartFrankenPhpCommand extends Command implements SignalableCommandInterfa
     public $signature = 'octane:frankenphp
                     {--host=127.0.0.1 : The IP address the server should bind to}
                     {--port= : The port the server should be available on}
-                    {--admin-port= : The port the admin server should be available on}
+                    {--admin-host=localhost : The host the admin server should be available on}
+                    {--admin-port=2019 : The port the admin server should be available on}
                     {--workers=auto : The number of workers that should be available to handle requests}
                     {--max-requests=500 : The number of requests to process before reloading the server}
                     {--caddyfile= : The path to the FrankenPHP Caddyfile file}
@@ -57,12 +60,12 @@ class StartFrankenPhpCommand extends Command implements SignalableCommandInterfa
     public function handle(ServerProcessInspector $inspector, ServerStateFile $serverStateFile)
     {
         $this->ensureFrankenPhpWorkerIsInstalled();
-        $this->ensureHostsAreAvailable();
+        $this->ensurePortIsAvailable();
 
         $frankenphpBinary = $this->ensureFrankenPhpBinaryIsInstalled();
 
         if ($inspector->serverIsRunning()) {
-            $this->error('FrankenPHP server is already running.');
+            $this->components->error('FrankenPHP server is already running.');
 
             return 1;
         }
@@ -73,7 +76,7 @@ class StartFrankenPhpCommand extends Command implements SignalableCommandInterfa
 
         $this->forgetEnvironmentVariables();
 
-        $host = $this->option('host');
+        $host = $this->getHost();
         $port = $this->getPort();
 
         $https = $this->option('https');
@@ -95,6 +98,7 @@ class StartFrankenPhpCommand extends Command implements SignalableCommandInterfa
             'REQUEST_MAX_EXECUTION_TIME' => $this->maxExecutionTime(),
             'CADDY_GLOBAL_OPTIONS' => ($https && $this->option('http-redirect')) ? '' : 'auto_https disable_redirects',
             'CADDY_SERVER_ADMIN_PORT' => $this->adminPort(),
+            'CADDY_SERVER_ADMIN_HOST' => $this->option('admin-host'),
             'CADDY_SERVER_LOG_LEVEL' => $this->option('log-level') ?: (app()->environment('local') ? 'INFO' : 'WARN'),
             'CADDY_SERVER_LOGGER' => 'json',
             'CADDY_SERVER_SERVER_NAME' => $serverName,
@@ -114,7 +118,7 @@ class StartFrankenPhpCommand extends Command implements SignalableCommandInterfa
      *
      * @return void
      */
-    protected function ensureHostsAreAvailable()
+    protected function ensurePortIsAvailable()
     {
         $host = $this->getHost();
 
@@ -207,6 +211,7 @@ class StartFrankenPhpCommand extends Command implements SignalableCommandInterfa
             'appName' => config('app.name', 'Laravel'),
             'host' => $this->getHost(),
             'port' => $this->getPort(),
+            'adminHost' => $this->option('admin-host'),
             'adminPort' => $this->adminPort(),
             'workers' => $this->workerCount(),
             'maxRequests' => $this->option('max-requests'),
@@ -269,7 +274,7 @@ class StartFrankenPhpCommand extends Command implements SignalableCommandInterfa
 
         $errorOutput->each(function ($output) {
             if (! is_array($debug = json_decode($output, true))) {
-                return $this->info($output);
+                return $this->components->info($output);
             }
 
             $message = $debug['msg'] ?? 'unknown error';
@@ -305,17 +310,19 @@ class StartFrankenPhpCommand extends Command implements SignalableCommandInterfa
                 ]);
             }
 
-            if ($debug['level'] === 'warn') {
-                return $this->warn($message);
-            }
-
-            if ($debug['level'] !== 'info') {
-                // Request timeout...
-                if (isset($debug['exit_status']) && $debug['exit_status'] === 255) {
-                    return;
+            if (isset($debug['level'])) {
+                if ($debug['level'] === 'warn') {
+                    return $this->components->warn($message);
                 }
 
-                return $this->error($message);
+                if ($debug['level'] !== 'info') {
+                    // Request timeout...
+                    if (isset($debug['exit_status']) && $debug['exit_status'] === 255) {
+                        return;
+                    }
+
+                    return $this->components->error($message);
+                }
             }
         });
     }

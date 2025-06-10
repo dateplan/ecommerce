@@ -40,6 +40,7 @@ trait InteractsWithIO
         'write error',
         'unable to determine directory for user configuration; falling back to current directory',
         '$HOME environment variable is empty',
+        'unable to get instance ID',
     ];
 
     /**
@@ -247,7 +248,7 @@ trait InteractsWithIO
             'throwable' => $this->throwableInfo($stream, $verbosity),
             'shutdown' => $this->shutdownInfo($stream, $verbosity),
             'raw' => $this->raw(json_encode($stream)),
-            default => $this->info(json_encode($stream), $verbosity)
+            default => $this->components->info(json_encode($stream), $this->parseVerbosity($verbosity))
         };
     }
 }

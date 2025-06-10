@@ -5,7 +5,9 @@ namespace Laravel\Octane\Commands;
 use Laravel\Octane\FrankenPhp\ServerProcessInspector as FrankenPhpServerProcessInspector;
 use Laravel\Octane\RoadRunner\ServerProcessInspector as RoadRunnerServerProcessInspector;
 use Laravel\Octane\Swoole\ServerProcessInspector as SwooleServerProcessInspector;
+use Symfony\Component\Console\Attribute\AsCommand;
 
+#[AsCommand(name: 'octane:reload')]
 class ReloadCommand extends Command
 {
     /**
@@ -49,12 +51,12 @@ class ReloadCommand extends Command
         $inspector = app(SwooleServerProcessInspector::class);
 
         if (! $inspector->serverIsRunning()) {
-            $this->error('Octane server is not running.');
+            $this->components->error('Octane server is not running.');
 
             return 1;
         }
 
-        $this->info('Reloading workers...');
+        $this->components->info('Reloading workers...');
 
         $inspector->reloadServer();
 
@@ -71,12 +73,12 @@ class ReloadCommand extends Command
         $inspector = app(RoadRunnerServerProcessInspector::class);
 
         if (! $inspector->serverIsRunning()) {
-            $this->error('Octane server is not running.');
+            $this->components->error('Octane server is not running.');
 
             return 1;
         }
 
-        $this->info('Reloading workers...');
+        $this->components->info('Reloading workers...');
 
         $inspector->reloadServer();
 
@@ -93,12 +95,12 @@ class ReloadCommand extends Command
         $inspector = app(FrankenPhpServerProcessInspector::class);
 
         if (! $inspector->serverIsRunning()) {
-            $this->error('Octane server is not running.');
+            $this->components->error('Octane server is not running.');
 
             return 1;
         }
 
-        $this->info('Reloading workers...');
+        $this->components->info('Reloading workers...');
 
         $inspector->reloadServer();
 
@@ -112,7 +114,7 @@ class ReloadCommand extends Command
      */
     protected function invalidServer(string $server)
     {
-        $this->error("Invalid server: {$server}.");
+        $this->components->error("Invalid server: {$server}.");
 
         return 1;
     }

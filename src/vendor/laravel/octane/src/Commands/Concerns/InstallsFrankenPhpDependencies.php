@@ -3,12 +3,15 @@
 namespace Laravel\Octane\Commands\Concerns;
 
 use GuzzleHttp\Client;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Laravel\Octane\FrankenPhp\Concerns\FindsFrankenPhpBinary;
 use RuntimeException;
 use Symfony\Component\Process\Process;
 use Throwable;
+
+use function Laravel\Prompts\confirm;
 
 trait InstallsFrankenPhpDependencies
 {
@@ -19,7 +22,7 @@ trait InstallsFrankenPhpDependencies
      *
      * @var string
      */
-    protected $requiredFrankenPhpVersion = '1.0.2';
+    protected $requiredFrankenPhpVersion = '1.1.0';
 
     /**
      * Ensure the FrankenPHP's Caddyfile and worker script are installed.
@@ -44,7 +47,7 @@ trait InstallsFrankenPhpDependencies
             return $frankenphpBinary;
         }
 
-        if ($this->confirm('Unable to locate FrankenPHP binary. Should Octane download the binary for your operating system?', true)) {
+        if (confirm('Unable to locate FrankenPHP binary. Should Octane download the binary for your operating system?', true)) {
             $this->downloadFrankenPhpBinary();
         }
 
@@ -55,6 +58,8 @@ trait InstallsFrankenPhpDependencies
      * Download the latest version of the FrankenPHP binary.
      *
      * @return string
+     *
+     * @throws RequestException
      */
     protected function downloadFrankenPhpBinary()
     {
@@ -71,9 +76,12 @@ trait InstallsFrankenPhpDependencies
             throw new RuntimeException('FrankenPHP binaries are currently only available for Linux (x86_64, aarch64) and macOS. Other systems should use the Docker images or compile FrankenPHP manually.');
         }
 
-        $assets = Http::accept('application/vnd.github+json')
+        $response = Http::accept('application/vnd.github+json')
             ->withHeaders(['X-GitHub-Api-Version' => '2022-11-28'])
-            ->get('https://api.github.com/repos/dunglas/frankenphp/releases/latest')['assets'];
+            ->get('https://api.github.com/repos/dunglas/frankenphp/releases/latest')
+            ->throw(fn () => $this->components->error('Failed to download FrankenPHP.'));
+
+        $assets = $response['assets'] ?? [];
 
         foreach ($assets as $asset) {
             if ($asset['name'] !== $assetName) {
@@ -135,7 +143,7 @@ trait InstallsFrankenPhpDependencies
             });
 
         if ($lineWithVersion === null) {
-            return $this->warn(
+            return $this->components->warn(
                 'Unable to determine the current FrankenPHP binary version. Please report this issue: https://github.com/laravel/octane/issues/new.',
             );
         }
@@ -143,7 +151,7 @@ trait InstallsFrankenPhpDependencies
         $version = Str::of($lineWithVersion)->trim()->afterLast('v')->value();
 
         if (preg_match('/\d+\.\d+\.\d+/', $version) !== 1) {
-            return $this->warn(
+            return $this->components->warn(
                 'Unable to determine the current FrankenPHP binary version. Please report this issue: https://github.com/laravel/octane/issues/new.',
             );
         }
@@ -152,9 +160,9 @@ trait InstallsFrankenPhpDependencies
             return;
         }
 
-        $this->warn("Your FrankenPHP binary version (<fg=red>$version</>) may be incompatible with Octane.");
+        $this->components->warn("Your FrankenPHP binary version (<fg=red>$version</>) may be incompatible with Octane.");
 
-        if ($this->confirm('Should Octane download the latest FrankenPHP binary version for your operating system?', true)) {
+        if (confirm('Should Octane download the latest FrankenPHP binary version for your operating system?', true)) {
             rename($frankenPhpBinary, "$frankenPhpBinary.backup");
 
             try {
@@ -164,7 +172,7 @@ trait InstallsFrankenPhpDependencies
 
                 rename("$frankenPhpBinary.backup", $frankenPhpBinary);
 
-                return $this->warn('Unable to download FrankenPHP binary. The underlying error has been logged.');
+                return $this->components->warn('Unable to download FrankenPHP binary. The underlying error has been logged.');
             }
 
             unlink("$frankenPhpBinary.backup");

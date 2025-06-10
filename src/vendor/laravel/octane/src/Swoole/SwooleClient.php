@@ -11,6 +11,7 @@ use Laravel\Octane\MimeType;
 use Laravel\Octane\Octane;
 use Laravel\Octane\OctaneResponse;
 use Laravel\Octane\RequestContext;
+use ReflectionClass;
 use Swoole\Http\Response as SwooleResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -179,7 +180,9 @@ class SwooleClient implements Client, ServesStaticFiles
         foreach ($response->headers->getCookies() as $cookie) {
             $shouldDelete = (string) $cookie->getValue() === '';
 
-            $swooleResponse->{$cookie->isRaw() ? 'rawcookie' : 'cookie'}(
+            $method = $cookie->isRaw() ? 'rawcookie' : 'cookie';
+
+            $params = [
                 $cookie->getName(),
                 $shouldDelete ? 'deleted' : $cookie->getValue(),
                 $cookie->getExpiresTime(),
@@ -188,7 +191,14 @@ class SwooleClient implements Client, ServesStaticFiles
                 $cookie->isSecure(),
                 $cookie->isHttpOnly(),
                 $cookie->getSameSite() ?? '',
-            );
+            ];
+
+            if (extension_loaded('swoole') && SWOOLE_VERSION_ID >= 60000) {
+                $params[] = '';
+                $params[] = $cookie->isPartitioned();
+            }
+
+            $swooleResponse->$method(...$params);
         }
     }
 
@@ -201,7 +211,10 @@ class SwooleClient implements Client, ServesStaticFiles
     protected function sendResponseContent(OctaneResponse $octaneResponse, SwooleResponse $swooleResponse): void
     {
         if ($octaneResponse->response instanceof BinaryFileResponse) {
-            $swooleResponse->sendfile($octaneResponse->response->getFile()->getPathname());
+            $swooleResponse->sendfile(
+                $octaneResponse->response->getFile()->getPathname(),
+                (new ReflectionClass(BinaryFileResponse::class))->getProperty('offset')->getValue($octaneResponse->response)
+            );
 
             return;
         }
@@ -236,7 +249,7 @@ class SwooleClient implements Client, ServesStaticFiles
             return;
         }
 
-        if ($length <= $this->chunkSize) {
+        if ($length <= $this->chunkSize || config('octane.swoole.options.open_http2_protocol', false)) {
             $swooleResponse->end($content);
 
             return;

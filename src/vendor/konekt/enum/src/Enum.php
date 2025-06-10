@@ -162,10 +162,6 @@ abstract class Enum implements EnumInterface
     /**
      * Checks if two enums are equal. Value and class are both matched.
      * Value check is not type strict.
-     *
-     * @param mixed $object
-     *
-     * @return bool True if enums are equal
      */
     public function equals(object $object): bool
     {
@@ -179,14 +175,25 @@ abstract class Enum implements EnumInterface
     /**
      * Checks if two enums are NOT equal. Value and class are both matched.
      * Value check is not type strict.
-     *
-     * @param mixed $object
-     *
-     * @return bool True if enums do not equal
      */
     public function notEquals(object $object): bool
     {
         return !$this->equals($object);
+    }
+
+    public function doesNotEqualTo(EnumInterface $enum): bool
+    {
+        return $this->notEquals($enum);
+    }
+
+    public function isAnyOf(EnumInterface ...$enums): bool
+    {
+        return !$this->isNoneOf(...$enums);
+    }
+
+    public function isNoneOf(EnumInterface ...$enums): bool
+    {
+        return empty(array_filter($enums, fn (Enum $enum) => $this->equals($enum)));
     }
 
     /**
@@ -418,7 +425,7 @@ abstract class Enum implements EnumInterface
 
     private static function strToConstName($str): string
     {
-        if (! ctype_lower($str)) {
+        if (!ctype_lower($str)) {
             $str = preg_replace('/\s+/u', '', ucwords($str));
             $str = strtolower(preg_replace('/(.)(?=[A-Z])/u', '$1' . '_', $str));
             $str = preg_replace('/(.+?)([0-9]+)/u', '$1' . '_' . '$2', $str);

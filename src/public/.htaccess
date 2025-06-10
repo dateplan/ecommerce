@@ -1,3 +1,28 @@
+# Security Headers
+<IfModule mod_headers.c>
+    # X-Frame-Options: clickjacking 対策
+    Header always set X-Frame-Options "SAMEORIGIN"
+    
+    # X-Content-Type-Options: MIME タイプのスニッフィング防止
+    Header always set X-Content-Type-Options "nosniff"
+    
+    # X-XSS-Protection: ブラウザのXSSフィルタを有効化
+    Header always set X-XSS-Protection "1; mode=block"
+    
+    # Referrer-Policy: リファラーポリシーの設定
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Content-Security-Policy: コンテンツセキュリティポリシー
+    # 必要に応じて適切なポリシーに変更してください
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-ancestors 'self'; form-action 'self';"
+    
+    # Permissions-Policy: ブラウザの機能へのアクセス制御
+    Header always set Permissions-Policy "geolocation=(), midi=(), sync-xhr=(), microphone=(), camera=(), magnetometer=(), gyroscope=(), payment=()"
+    
+    # HTTP Strict Transport Security (HSTS)
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+</IfModule>
+
 # Rewrite Module
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>

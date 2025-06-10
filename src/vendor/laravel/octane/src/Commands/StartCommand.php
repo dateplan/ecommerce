@@ -2,8 +2,10 @@
 
 namespace Laravel\Octane\Commands;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\SignalableCommandInterface;
 
+#[AsCommand(name: 'octane:start')]
 class StartCommand extends Command implements SignalableCommandInterface
 {
     use Concerns\InteractsWithServers;
@@ -123,7 +125,7 @@ class StartCommand extends Command implements SignalableCommandInterface
      */
     protected function invalidServer(string $server)
     {
-        $this->error("Invalid server: {$server}.");
+        $this->components->error("Invalid server: {$server}.");
 
         return 1;
     }

@@ -9,8 +9,7 @@ return [
     | All the configurations are related to the shop themes.
     |
     */
-
-    'shop-default' => 'default',
+    'shop-default' => 'custom',
 
     'shop' => [
         'default' => [
@@ -21,6 +20,17 @@ return [
             'vite'        => [
                 'hot_file'                 => 'shop-default-vite.hot',
                 'build_directory'          => 'themes/shop/default/build',
+                'package_assets_directory' => 'src/Resources/assets',
+            ],
+        ],
+        'custom' => [
+            'name'        => 'Custom',
+            'assets_path' => 'public/themes/custom',
+            'views_path'  => 'packages/Webkul/Shop/src/Resources/views/custom',
+
+            'vite'        => [
+                'hot_file'                 => 'shop-custom-vite.hot',
+                'build_directory'          => 'themes/custom/build',
                 'package_assets_directory' => 'src/Resources/assets',
             ],
         ],

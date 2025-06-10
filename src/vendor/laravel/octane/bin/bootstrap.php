@@ -1,6 +1,5 @@
 <?php
 
-use Laravel\Octane\Exceptions\DdException;
 use Laravel\Octane\Octane;
 
 ini_set('display_errors', 'stderr');
@@ -26,13 +25,6 @@ if (! is_string($basePath)) {
     exit(11);
 }
 
-if (! function_exists('dd')) {
-    function dd(...$vars)
-    {
-        throw new DdException($vars);
-    }
-}
-
 /*
 |--------------------------------------------------------------------------
 | Register The Auto Loader
@@ -45,7 +37,9 @@ if (! function_exists('dd')) {
 |
 */
 
-if (! is_file($autoload_file = $basePath.'/vendor/autoload.php')) {
+$vendorDir = $_ENV['COMPOSER_VENDOR_DIR'] ?? "{$basePath}/vendor";
+
+if (! is_file($autoload_file = "{$vendorDir}/autoload.php")) {
     Octane::writeError("Composer autoload file was not found. Did you install the project's dependencies?");
 
     exit(10);

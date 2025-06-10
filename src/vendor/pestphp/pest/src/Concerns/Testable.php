@@ -234,11 +234,13 @@ trait Testable
             $afterEach = ChainableClosure::bound($this->__afterEach, $afterEach);
         }
 
-        $this->__callClosure($afterEach, func_get_args());
+        try {
+            $this->__callClosure($afterEach, func_get_args());
+        } finally {
+            parent::tearDown();
 
-        parent::tearDown();
-
-        TestSuite::getInstance()->test = null;
+            TestSuite::getInstance()->test = null;
+        }
     }
 
     /**
@@ -290,7 +292,7 @@ trait Testable
             return $arguments;
         }
 
-        if (in_array($testParameterTypes[0], [Closure::class, 'callable'])) {
+        if (isset($testParameterTypes[0]) && in_array($testParameterTypes[0], [Closure::class, 'callable'])) {
             return $arguments;
         }
 

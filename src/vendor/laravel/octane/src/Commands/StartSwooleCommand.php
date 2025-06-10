@@ -6,10 +6,12 @@ use Illuminate\Support\Str;
 use Laravel\Octane\Swoole\ServerProcessInspector;
 use Laravel\Octane\Swoole\ServerStateFile;
 use Laravel\Octane\Swoole\SwooleExtension;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\SignalableCommandInterface;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
+#[AsCommand(name: 'octane:swoole')]
 class StartSwooleCommand extends Command implements SignalableCommandInterface
 {
     use Concerns\InteractsWithEnvironmentVariables, Concerns\InteractsWithServers;
@@ -53,19 +55,21 @@ class StartSwooleCommand extends Command implements SignalableCommandInterface
         SwooleExtension $extension
     ) {
         if (! $extension->isInstalled()) {
-            $this->error('The Swoole extension is missing.');
+            $this->components->error('The Swoole extension is missing.');
 
             return 1;
         }
 
+        $this->ensurePortIsAvailable();
+
         if ($inspector->serverIsRunning()) {
-            $this->error('Server is already running.');
+            $this->components->error('Server is already running.');
 
             return 1;
         }
 
         if (config('octane.swoole.ssl', false) === true && ! defined('SWOOLE_SSL')) {
-            $this->error('You must configure Swoole with `--enable-openssl` to support ssl.');
+            $this->components->error('You must configure Swoole with `--enable-openssl` to support ssl.');
 
             return 1;
         }
@@ -173,7 +177,7 @@ class StartSwooleCommand extends Command implements SignalableCommandInterface
             ->filter()
             ->each(fn ($output) => is_array($stream = json_decode($output, true))
                 ? $this->handleStream($stream)
-                : $this->info($output)
+                : $this->components->info($output)
             );
 
         Str::of($errorOutput)
