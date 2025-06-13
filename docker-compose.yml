@@ -1,64 +1,70 @@
-version: '3.8'
+# Removed 'version: 3.8' as it's obsolete and causes a warning
 
 services:
   app:
     build: .
     container_name: bagisto_app
-    working_dir: /var/www/html
+    # working_dir is often implicit with volume mounts, keeping it commented for simplicity
     volumes:
       - ./src:/var/www/html
       - ./database:/var/www/html/database
     networks:
       - bagisto-network
     depends_on:
-      - db
+      db:
+        condition: service_started # Ensure DB is running before app starts
     ports:
-      - "9000:9000"
+      - "9000:9000" # PHP-FPM's port, useful for direct access/debugging
     environment:
+      # Laravel/Bagisto Database Connection Settings
       - DB_CONNECTION=mysql
-      - DB_HOST=db
+      - DB_HOST=db # Service name of the database container within the Docker network
       - DB_PORT=3306
       - DB_DATABASE=bagisto
       - DB_USERNAME=root
       - DB_PASSWORD=secret
-      - DB_DATABASE_TEST=/var/www/html/database/testing.sqlite
+      - DB_DATABASE_TEST=/var/www/html/database/testing.sqlite # For tests
     command: bash -c "sleep 10 && composer install && php artisan key:generate && php-fpm"
-    platform: linux/arm64
+    platform: linux/arm64 # Specifies ARM64 for Mac M-series compatibility
 
   db:
-    image: mysql:5.7
+    # Switched to MariaDB which provides official ARM64 support for compatibility
+    image: mariadb:10.5 # Recommended alternative for MySQL 5.7 on ARM64
     container_name: bagisto_db
-    restart: always
+    restart: always # Always restart if the container stops
     environment:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: bagisto
     volumes:
-      - db_data:/var/lib/mysql
+      - db_data:/var/lib/mysql # Persistent volume for database data
     networks:
       - bagisto-network
     ports:
-      - "3306:3306"
-    platform: linux/amd64
+      - "3306:3306" # MySQL/MariaDB port, useful for direct access/debugging
+    platform: linux/arm64 # Explicitly specify ARM64 platform for the database image
 
   nginx:
     image: nginx:alpine
     container_name: bagisto_nginx
-    working_dir: /var/www/html
+    # working_dir is often implicit with volume mounts, keeping it commented for simplicity
     depends_on:
-      - app
+      app:
+        condition: service_started # Ensure app (PHP-FPM) is running before Nginx
     volumes:
-      - ./src:/var/www/html
-      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./src:/var/www/html # Mount Bagisto application files
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf # Mount Nginx config
     ports:
-      - "8080:80"
+      - "8080:80" # Map host port 8080 to container's port 80 for Nginx
     networks:
       - bagisto-network
-    platform: linux/arm64
+    platform: linux/arm64 # Specifies ARM64 for Mac M-series compatibility
 
+# Define Docker networks
 networks:
   bagisto-network:
-    driver: bridge
+    driver: bridge # Standard bridge network for inter-container communication
 
+# Define Docker volumes for persistence
 volumes:
   db_data:
-    driver: local
+    driver: local # Local volume for database data persistence
