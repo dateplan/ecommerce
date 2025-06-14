@@ -151,9 +151,9 @@
                         @endif
 
                         <div class="flex flex-col gap-1.5">
-                            <p class="text-base font-semibold text-gray-800 dark:text-white">
+                            <a :href="`{{ route('admin.catalog.products.edit', '') }}/${record.product_id}`" class="text-base font-semibold text-blue-600 hover:underline dark:text-blue-400">
                                 @{{ record.name }}
-                            </p>
+                            </a>
 
                             <p class="text-gray-600 dark:text-gray-300">
                                 @{{ "@lang('admin::app.catalog.products.index.datagrid.sku-value')".replace(':sku', record.sku) }}
