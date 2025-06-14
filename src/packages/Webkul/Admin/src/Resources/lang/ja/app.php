@@ -771,8 +771,9 @@ return [
             ],
 
             'edit' => [
-                'preview'  => 'プレビュー',
-                'remove'   => '削除',
+                'preview'        => 'プレビュー',
+                'preview-hidden' => 'プレビュー (非表示中)',
+                'remove'         => '削除',
                 'save-btn' => '製品を保存',
                 'title'    => '製品を編集',
 

@@ -771,8 +771,9 @@ return [
             ],
 
             'edit' => [
-                'preview'  => 'Preview',
-                'remove'   => 'Remove',
+                'preview'        => 'Preview',
+                'preview-hidden' => 'Preview (Hidden)',
+                'remove'         => 'Remove',
                 'save-btn' => 'Save Product',
                 'title'    => 'Edit Product',
 

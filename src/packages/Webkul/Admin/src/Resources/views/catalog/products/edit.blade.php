@@ -15,9 +15,70 @@
         <div class="grid gap-2.5">
             <div class="flex items-center justify-between gap-4 max-sm:flex-wrap">
                 <div class="grid gap-1.5">
-                    <p class="text-xl font-bold leading-6 text-gray-800 dark:text-white">
-                        @lang('admin::app.catalog.products.edit.title')
-                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-3">
+                            <p class="text-xl font-bold leading-6 text-gray-800 dark:text-white">
+                                @lang('admin::app.catalog.products.edit.title')
+                            </p>
+                            @if ($product->url_key)
+                                <div class="flex items-center gap-2">
+                                    <!-- Preview Button -->
+                                    <a 
+                                        href="{{ route('shop.product_or_category.index', $product->url_key) }}" 
+                                        target="_blank"
+                                        class="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+                                        title="プレビュー (管理者用)"
+                                    >
+                                        <span class="icon-eye text-base mr-1"></span>
+                                        プレビュー
+                                    </a>
+
+                                    <!-- View on Shop Button -->
+                                    <a 
+                                        href="{{ route('shop.product_or_category.index', $product->url_key) }}" 
+                                        target="_blank"
+                                        class="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors"
+                                        title="ショップで見る"
+                                    >
+                                        <span class="icon-shopping-bag text-base mr-1"></span>
+                                        ショップで見る
+                                    </a>
+
+                                    <!-- Category Links -->
+                                    @if($product->categories->isNotEmpty())
+                                        <div class="relative group">
+                                            <button 
+                                                type="button" 
+                                                class="inline-flex items-center justify-center w-8 h-8 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                                                aria-expanded="false"
+                                            >
+                                                <span class="icon-arrow-down text-xl"></span>
+                                            </button>
+                                            
+                                            <!-- Dropdown menu -->
+                                            <div class="absolute right-0 z-10 hidden w-56 mt-2 origin-top-right bg-white rounded-md shadow-lg dark:bg-gray-800 ring-1 ring-black ring-opacity-5 group-hover:block">
+                                                <div class="py-1" role="menu" aria-orientation="vertical">
+                                                    @foreach($product->categories as $category)
+                                                        @if($category->url_key)
+                                                        <a 
+                                                            href="{{ route('shop.product_or_category.index', $category->url_key) }}" 
+                                                            target="_blank"
+                                                            class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                                                            role="menuitem"
+                                                        >
+                                                            <span class="icon-category text-base mr-2"></span>
+                                                            {{ $category->name }} カテゴリを見る
+                                                        </a>
+                                                        @endif
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+                            @endif
+                        </div>
+                    </div>
                 </div>
 
                 <div class="flex items-center gap-x-2.5">
@@ -29,20 +90,7 @@
                         @lang('admin::app.account.edit.back-btn')
                     </a>
 
-                    <!-- Preview Button -->
-                    @if (
-                        $product->status
-                        && $product->visible_individually
-                        && $product->url_key
-                    )
-                        <a
-                            href="{{ route('shop.product_or_category.index', $product->url_key) }}"
-                            class="secondary-button"
-                            target="_blank"
-                        >
-                            @lang('admin::app.catalog.products.edit.preview')
-                        </a>
-                    @endif
+                    <!-- Preview button has been moved next to the page title -->
 
                     <!-- Save Button -->
                     <button class="primary-button">

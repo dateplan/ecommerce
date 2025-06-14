@@ -244,15 +244,28 @@
                             </p>
                         </div>
 
-                        <div class="flex items-center gap-1.5">
+                        <div class="flex items-center gap-2">
+                            <!-- View Button -->
                             <a
                                 v-for="action in record.actions"
                                 :href="action.url"
+                                class="inline-flex items-center px-2.5 py-1 text-sm font-medium rounded-md transition-colors"
+                                :class="{
+                                    'text-blue-600 bg-blue-50 hover:bg-blue-100': action.icon.includes('view'),
+                                    'text-orange-600 bg-orange-50 hover:bg-orange-100': action.icon.includes('copy'),
+                                    'text-gray-600 bg-gray-50 hover:bg-gray-100': !action.icon.includes('view') && !action.icon.includes('copy')
+                                }"
+                                :title="action.title"
+                                data-tooltip
+                                :data-tooltip-text="action.title"
                             >
-                                <span
-                                    class="cursor-pointer rounded-md p-1.5 text-2xl transition-all hover:bg-gray-200 dark:hover:bg-gray-800 ltr:ml-1 rtl:mr-1"
+                                <span 
+                                    class="text-base mr-1" 
                                     :class="action.icon"
                                 ></span>
+                                <span v-if="action.icon.includes('view')">表示</span>
+                                <span v-else-if="action.icon.includes('copy')">コピー</span>
+                                <span v-else>編集</span>
                             </a>
                         </div>
                     </div>
