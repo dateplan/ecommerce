@@ -54,9 +54,30 @@ class ProductController extends Controller
             return datagrid(ProductDataGrid::class)->process();
         }
 
-        $families = $this->attributeFamilyRepository->all();
+        try {
+            // 商品一覧を取得
+            $products = $this->productRepository
+                ->whereNotNull('attribute_family_id')
+                ->with([
+                    'attribute_family',
+                    'attribute_values',
+                    'images'
+                ])
+                ->orderBy('created_at', 'desc')
+                ->paginate(10);
 
-        return view('admin::catalog.products.index', compact('families'));
+            $families = $this->attributeFamilyRepository->all();
+            
+            return view('admin::catalog.products.index', compact('products', 'families'));
+            
+        } catch (\Exception $e) {
+            // エラーを表示してデバッグ
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ], 500);
+        }
     }
 
     /**
